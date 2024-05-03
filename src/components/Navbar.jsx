@@ -1,12 +1,20 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/auth'
 import { toast } from 'react-toastify';
+import SearchInput from './Form/SearchInput';
+import useCategory from '../hooks/UseCategory';
+import { useCard } from '../context/Card';
 
 
 
 function Navbar() {
   const [auth, setAuth] = useAuth();
+  const [card] = useCard()
+  const categories = useCategory()
+
+
+
   const handleLogout = () => {
     setAuth({
       ...auth,
@@ -40,9 +48,29 @@ function Navbar() {
           <ul className="menu menu-horizontal px-1">
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/shop'}>Shop</Link></li>
-            <li><Link to={'/privacy-policy'}>Category</Link></li>
+            <li className='z-50'>
+              <details>
+                <summary>
+                  Category
+                </summary>
+                <div className='absolute'>
+                  <ul className="bg-base-100 rounded-none text-black m-0 inline-block  p-0 ">
+                    <li ><Link to={`/categories`} className=' w-36 cursor-pointer hover:bg-black hover:text-white py-2 px-2 rounded-none'>All Categories</Link></li>
+
+                    {categories.map((c) => (
+                      <li key={c._id} className=' w-36 cursor-pointer hover:bg-black hover:text-white '>
+                        <Link className=' text-center mx-auto' to={`/categories/${c.slug}`}>{c.name}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
+            </li>
+
           </ul>
+
         </div>
+        <SearchInput />
         <div className="navbar-end gap-3">
           {
             !auth.user ? (<>
@@ -62,8 +90,8 @@ function Navbar() {
                         <h1>{auth?.user?.name}</h1>
                       </summary>
                       <ul className=" w-full bg-black rounded-t-none">
-                          <li><Link className='mx-auto' to={`/dashboard/${auth?.user?.role === 1 ? 'admin' : 'user'}`}>Dashboard</Link></li>
-                          <li><Link className='mx-auto' to={'/login'} onClick={handleLogout}> Logout</Link></li>
+                        <li><Link className='mx-auto' to={`/dashboard/${auth?.user?.role === 1 ? 'admin' : 'user'}`}>Dashboard</Link></li>
+                        <li><Link className='mx-auto' to={'/login'} onClick={handleLogout}> Logout</Link></li>
                       </ul>
                     </details>
                   </li>
@@ -80,15 +108,16 @@ function Navbar() {
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
               <div className="indicator">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                <span className="badge badge-sm indicator-item">8</span>
+                <span className="badge badge-sm indicator-item">{card?.length}</span>
               </div>
             </div>
             <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
               <div className="card-body">
-                <span className="font-bold text-lg text-black">8 Items</span>
+
+                <span className="text-yellow-700">Items: {card?.length}</span>
                 <span className="text-yellow-700">Subtotal: $999</span>
                 <div className="card-actions">
-                  <button className="btn bg-yellow-400 btn-block">View cart</button>
+                  <NavLink className="btn bg-yellow-400 btn-block" to={"/card"}>View cart</NavLink>
                 </div>
               </div>
             </div>

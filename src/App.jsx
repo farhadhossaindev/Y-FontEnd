@@ -27,6 +27,12 @@ import UserOrder from "./pages/user/UserOrder";
 import Product from "./pages/Admin/Product";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
 import Shop from "./pages/Shop";
+import Search from "./pages/Search";
+import SingleProduct from "./pages/SingleProduct";
+import Categories from "./pages/Categories";
+import CategoryProduct from "./pages/CategoryProduct";
+import { Card } from "./pages/Card";
+import AdminOrder from "./pages/Admin/AdminOrder";
 
 function App() {
 
@@ -35,6 +41,11 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/card" element={<Card />} />
+        <Route path="/categories/:slug" element={<CategoryProduct />} />
+        <Route path="/product/:slug" element={<SingleProduct />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/about" element={<About />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
@@ -56,6 +67,7 @@ function App() {
           <Route path="admin/products/:slug" element={<UpdateProduct />} />
           <Route path="admin/products" element={<Product />} />
           <Route path="admin/allusers" element={<AllUsers />} />
+          <Route path="admin/all-orders" element={<AdminOrder />} />
         </Route>
 
         <Route path="/forget-password" element={<ForgetPassword />} />

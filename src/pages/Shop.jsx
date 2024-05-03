@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import { prices } from '../components/prices';
+import { useNavigate } from 'react-router-dom';
+import { useCard } from '../context/Card';
+import { toast } from 'react-toastify';
 
 function Shop() {
     const [products, setProducts] = useState([]);
@@ -11,6 +14,9 @@ function Shop() {
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const [card, setCard] = useCard()
+
 
     // Function to get all categories
     const getAllCategory = async () => {
@@ -61,6 +67,7 @@ function Shop() {
             console.log(error);
         }
     };
+
 
     // Event handler for category filter
     const handleFilter = (value, id) => {
@@ -133,7 +140,7 @@ function Shop() {
                                 <div className="card-body">
                                     <h2 className="card-title">
                                         {p.name}
-                                        <div className="badge badge-secondary">TK {p.price}</div>
+                                        <div className="badge badge-secondary">$ {p.price}</div>
                                     </h2>
                                     <p>{p.description?.substring(0, 30)}...</p>
                                     <div className="card-actions justify-end">
@@ -141,8 +148,12 @@ function Shop() {
                                         <div className="badge badge-outline">{p.category.name}</div>
                                     </div>
                                     <div className='flex gap-20 justify-center py-5'>
-                                        <button className="btn bg-primary text-white ">Add to Card</button>
-                                        <button className="btn bg-slate-600 text-white ">Read More</button>
+                                        <button className="btn bg-primary text-white" onClick={() => {
+                                            setCard([...card, p])
+                                            localStorage.setItem('card', JSON.stringify([...card, p]))
+                                            toast.success('Item Added to card')
+                                        }}>Add to Card</button>
+                                        <button onClick={() => navigate(`/product/${p.slug}`)} className="btn bg-slate-600 text-white ">Read More</button>
                                     </div>
                                 </div>
                             </div>
